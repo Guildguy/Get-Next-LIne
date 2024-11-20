@@ -1,45 +1,51 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fleite-j <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 18:33:23 by fleite-j          #+#    #+#             */
+/*   Updated: 2024/11/20 18:33:37 by fleite-j         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-char *get_next_line(int fd)
+char	*ft_fill_line_buffer(int fd, char *left_c, char *buffer)
 {
-	int				fpointer;
-	unsigned char	buffer[600];
-	int				bread;
+	ssize_t	b_read;
+	char	*temporary;
 
-	fpointer = open(fd, O_RDONLY);
-	if (fpointer == -1)
+	b_read = 1;
+	while (b_read > 0)
 	{
-		printf("\nError to open the file!!\n");
-		exit(1);
+		b_read = read(fd, buffer, BUFFER_SIZE);
+		if (b_read == -1)
+		{
+			free(left_c);
+			return (NULL);
+		}
+		else if (b_read == 0)
+			break ;
+		buffer[b_read] = '\0';
+		if (!left_c)
+			left_c = ft_strdup("");
+		temporary = left_c;
+		left_c = ft_strjoin(temporary, buffer);
+		free(temporary);
+		temporary = NULL;
+		if (ft_strchr(buffer, '\n'))
+			break ;
 	}
-	else
-		printf("\nFile opened with sucess!\n");
-	bread = read(fpointer, buffer, sizeof(buffer));
-	if (bread == -1)
-	{
-		printf("\nError to open the file!!\n");
-		close(fpointer);
-		exit(1);
-	}
-	buffer[bread] = '\0';
-	close(fpointer);
-	printf("\n%d bytes read!\n \nFile conten:\n\n%s\n", bread, buffer);
-	return (ft_strdup((char *)buffer));
+	return (left_c);
 }
 
-
-int	main(int ac, char *av[])
+static char *ft_set_line(char *line_buffer)
 {
-	int		c = 1;
-	char	*file;	
-
-	while (c < ac)
-	{
-		printf("str: %s", av[c]);
-		c++;
-	}
-	file = get_next_line("/root/GNL/archive.txt");
-	printf("\n%s\n", file);
-	free(file);
-	return (0);
+	
 }
+
+/*char *get_next_line(int fd)
+{
+}*/
