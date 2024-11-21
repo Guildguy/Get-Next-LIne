@@ -41,11 +41,28 @@ char	*ft_fill_line_buffer(int fd, char *left_c, char *buffer)
 	return (left_c);
 }
 
-static char *ft_set_line(char *line_buffer)
+static char	*ft_set_line(char *line_buffer)
+{
+	char	*left_c;
+	ssize_t	i;
+
+	i = 0;
+	while (line_buffer[i] != '\0' || line_buffer[i] != '\n')
+		i++;
+	if (line_buffer[i] == 0 || line_buffer[1] == 0)
+		return (NULL);
+	left_c = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
+	if (left_c == 0)
+	{
+		free(left_c);
+		left_c = NULL;
+	}
+	line_buffer[i + 1] = '\0';
+
+	return (left_c);
+}
+
+char	*get_next_line(int fd)
 {
 	
 }
-
-/*char *get_next_line(int fd)
-{
-}*/
