@@ -64,5 +64,26 @@ static char	*ft_set_line(char *line_buffer)
 
 char	*get_next_line(int fd)
 {
-	
+	static char	*left_C;
+	char	*line;
+	char	*buffer;
+
+	buffer = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (fd < 0 || BUFFER_SIZE < 0 || read(fd, 0, 0) < 0)
+	{
+		free(left_C);
+		free(buffer);
+		left_C = NULL;
+		buffer = (NULL);
+		return (NULL);
+	}
+	if (!buffer)
+		return (NULL);
+	line = ft_fill_line_buffer(fd, left_C, buffer);
+	free(buffer);
+	buffer = NULL;
+	if (!line)
+		return (NULL);
+	left_C = ft_set_line(line);
+	return (line);
 }
