@@ -6,17 +6,12 @@ size_t	ft_strlen(const char *s)
 
 	length = 0;
 	while (s[length])
-	{
 		length++;
-	}
 	return (length);
 }
 
 char	*ft_strchr(const char *s, int c)
 {
-	size_t	s_len;
-
-	s_len = ft_strlen(s);
 	while (*s)
 	{
 		if (*s == (char) c)
@@ -31,18 +26,18 @@ char	*ft_strchr(const char *s, int c)
 char	*ft_strdup(const char *s)
 {
 	char	*dup;
-	size_t	i;
+	size_t	index;
 
-	i = 0;
+	index = 0;
 	dup = (char *) malloc(ft_strlen(s) + 1);
 	if (!dup)
 		return (NULL);
-	while (s[i])
+	while (s[index])
 	{
-		dup[i] = s[i];
-		i++;
+		dup[index] = s[index];
+		index++;
 	}
-		dup[i] = 0;
+	dup[index] = '\0';
 	return (dup);
 }
 
