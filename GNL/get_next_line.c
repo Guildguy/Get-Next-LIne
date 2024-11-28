@@ -47,11 +47,11 @@ static char	*ft_set_line(char *line_buffer)
 	ssize_t	index;
 
 	index = 0;
-	while (line_buffer[index] != '\0' || line_buffer[index] != '\n')
+	while (line_buffer[index] != '\0' && line_buffer[index] != '\n')
 		index++;
 	if (line_buffer[index] == 0 || line_buffer[1] == 0)
 		return (NULL);
-	remaining_data = ft_substr(line_buffer, index + 1, ft_strlen(line_buffer) - index);
+	remaining_data = ft_substr(line_buffer, index + 1, ft_strlen(line_buffer) - index - 1);
 	if (remaining_data == 0)
 	{
 		free(remaining_data);
@@ -69,7 +69,7 @@ char	*get_next_line(int fd)
 	char	*buffer;
 
 	buffer = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (fd < 0 || BUFFER_SIZE < 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE < 0 || !buffer)
 	{
 		free(remaining_buffer);
 		free(buffer);
