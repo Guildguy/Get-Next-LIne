@@ -1,23 +1,29 @@
-CC = CC
-CFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=42
+TARGET = gnl_test
 
-FUNCTIONS = get_next_line main
+CFLAGS = -Wall -Wextra -Werror -g -D BUFFER_SIZE=42
 
-OBJ = $(FUNCTIONS:=.o)
-NAME = get_next_line.a
+CC = cc
 
-all: $(NAME)
+SRCS = get_next_line.c get_next_line_utils.c main.c
 
-$(NAME): $(OBJ)
-	ar rcs $@ $^
-%.o: $.c
-	$(CC) $(CFLAGS) -I. -c -o $@ $^
+OBJS = $(SRCS:.c=.o)
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+valgrind: $(TARGET)
+	valgrind --leak-check=full --track-origins=yes ./$(TARGET) archive.txt
 
 clean:
-	rm -f $(OBJ)
+	rm -f $(OBJS)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(TARGET)
 
 re: fclean all
 
