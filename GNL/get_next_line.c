@@ -6,84 +6,76 @@
 /*   By: fleite-j <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 18:33:23 by fleite-j          #+#    #+#             */
-/*   Updated: 2024/11/20 18:33:37 by fleite-j         ###   ########.fr       */
+/*   Updated: 2024/11/29 19:25:13 by fleite-j         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_fill_line_buffer(int fd, char *remaining_data, char *buffer)
+char	*ft_fill_line_buffer(int fd, char *buffer, char *stored_buffer)
 {
 	ssize_t	bytes_read;
 	char	*temporary_buffer;
 
 	bytes_read = 1;
+	temporary_buffer = NULL;
 	while (bytes_read > 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
-		{
-			free(remaining_data);
 			return (NULL);
-		}
 		else if (bytes_read == 0)
 			break ;
 		buffer[bytes_read] = '\0';
-		if (!remaining_data)
-			remaining_data = ft_strdup("");
-		temporary_buffer = remaining_data;
-		remaining_data = ft_strjoin(temporary_buffer, buffer);
+		if (!stored_buffer)
+			stored_buffer = ft_strdup("");
+		temporary_buffer = stored_buffer;
+		stored_buffer = ft_strjoin(temporary_buffer, buffer);
 		free(temporary_buffer);
 		temporary_buffer = NULL;
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
-	return (remaining_data);
+	return (stored_buffer);
 }
 
-static char	*ft_set_line(char *line_buffer)
+static char	*ft_set_line(char *line)
 {
+	int		end_of_line;
 	char	*remaining_data;
-	ssize_t	index;
+	char	*new_line;
 
-	index = 0;
-	while (line_buffer[index] != '\0' && line_buffer[index] != '\n')
-		index++;
-	if (line_buffer[index] == 0 || line_buffer[1] == 0)
-		return (NULL);
-	remaining_data = ft_substr(line_buffer, index + 1, ft_strlen(line_buffer) - index - 1);
-	if (remaining_data == 0)
+	if (line && ft_strchr(line, '\n'))
 	{
-		free(remaining_data);
-		remaining_data = NULL;
+		new_line = ft_strchr(line, '\n');
+		end_of_line = ft_strlen(line) - ft_strlen(new_line) + 1;
+		remaining_data = ft_strdup(new_line + 1);
+		line[end_of_line] = '\0';
+		return (remaining_data);
 	}
-	line_buffer[index + 1] = '\0';
-
-	return (remaining_data);
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*remaining_buffer;
-	char	*line;
-	char	*buffer;
+	static char	*stored_buffer;
+	char		*line;
+	char		*buffer;
 
-	buffer = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (fd < 0 || BUFFER_SIZE < 0 || !buffer)
-	{
-		free(remaining_buffer);
-		free(buffer);
-		remaining_buffer = NULL;
-		buffer = (NULL);
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	}
+	buffer = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	line = ft_fill_line_buffer(fd, remaining_buffer, buffer);
+	line = ft_fill_line_buffer(fd, buffer, stored_buffer);
 	free(buffer);
-	buffer = NULL;
-	if (!line)
-		return (NULL);
-	remaining_buffer = ft_set_line(line);
+	if (line == NULL && stored_buffer)
+		free (stored_buffer);
+	stored_buffer = ft_set_line(line);
+	if (line == NULL || *line == '\0')
+	{
+		free (line);
+		line = NULL;
+	}
 	return (line);
 }
