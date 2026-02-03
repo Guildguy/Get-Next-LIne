@@ -1,18 +1,26 @@
-Descrição: O Get Next Line é um projeto que desafia a escrever uma função em C capaz de ler e retornar uma linha completa de um file descriptor (que pode ser um arquivo, entrada padrão, etc.), uma por vez, mesmo que a linha não caiba em um único buffer de leitura.
+## 📄 Get Next Line
 
-Desafios e Implementação:
+### Description
+Get Next Line is a project that challenges the student to write a C function capable of reading and returning a full line from a file descriptor (which may refer to a file, standard input, etc.), one line at a time, even when the line does not fit into a single read buffer.
 
-Persistência de Dados: O principal desafio foi gerenciar dados de leituras parciais que excediam o tamanho do buffer. Isso foi resolvido de forma elegante utilizando variáveis estáticas para manter o estado entre as chamadas da função.
+### Challenges and Implementation
 
-Manipulação de File Descriptors: Gerenciar a leitura de diferentes file descriptors simultaneamente (parte bônus, embora eu tenha focado na mandatório) exigiu lógica cuidadosa.
+- **Data Persistence**  
+  The main challenge was managing partial reads that exceeded the buffer size. This was elegantly solved using static variables to preserve state between function calls.
 
-Otimização de Leitura: Balancear o tamanho do buffer para otimizar o desempenho de leitura.
+- **File Descriptor Handling**  
+  Managing reads from multiple file descriptors simultaneously (bonus part, although my focus was on the mandatory requirements) required careful logic.
 
-O que aprendi:
+- **Read Optimization**  
+  Balancing buffer size to optimize reading performance.
 
-Variáveis Estáticas: Compreensão aprofundada do uso e comportamento das variáveis estáticas em C.
+### What I Learned
 
-Entrada/Saída (I/O) em C: Manipulação de file descriptors e o processo de leitura de dados de diferentes fontes.
+- **Static Variables**  
+  In-depth understanding of the use and behavior of static variables in C.
 
-Gerenciamento de Buffers: Estratégias para armazenar e processar dados em partes.
+- **Input/Output (I/O) in C**  
+  Handling file descriptors and the process of reading data from different sources.
 
+- **Buffer Management**  
+  Strategies for storing and processing data in chunks.
